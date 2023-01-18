@@ -14,7 +14,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Typography>Boom Bap</Typography>
+        <Typography>Krio Dictionary</Typography>
       </main>
     </>
   );
