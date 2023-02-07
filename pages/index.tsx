@@ -1,5 +1,4 @@
 import Head from 'next/head';
-import Image from 'next/image';
 import { Inter } from '@next/font/google';
 import Typography from '@mui/material/Typography';
 
@@ -15,7 +14,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Typography>Boom Bap</Typography>
+        <Typography>Krio Dictionary</Typography>
       </main>
     </>
   );
