@@ -11,8 +11,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import LoadingButton from '@mui/lab/LoadingButton';
 
-import Copyright from '../../components/auth/copyright';
 import { BASE_API, postLib } from '../../utility/api';
+import Copyright from '../../components/Auth/copyright';
 
 const SignUp: NextPage = (): JSX.Element => {
   const router = useRouter();
