@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { NextPage } from 'next';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Avatar from '@mui/material/Avatar';
 import TextField from '@mui/material/TextField';
@@ -12,7 +13,7 @@ import Container from '@mui/material/Container';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import { BASE_API, postLib } from '../../utility/api';
-import Copyright from '../../components/Auth/copyright';
+import Copyright from '../../components/auth/copyright';
 
 const SignUp: NextPage = (): JSX.Element => {
   const router = useRouter();
@@ -42,6 +43,9 @@ const SignUp: NextPage = (): JSX.Element => {
 
   return (
     <Container component="main" maxWidth="xs">
+      <Head>
+        <title>Krio Dictionary - Register</title>
+      </Head>
       <Box
         sx={{
           marginTop: 8,
