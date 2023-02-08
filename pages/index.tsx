@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Krio Dictionary</title>
+        <title>Krio Dictionary - Home</title>
         <meta name="description" content="A web based Krio dictionary" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

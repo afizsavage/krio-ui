@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { NextPage } from 'next';
+import Head from 'next/head';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -13,7 +14,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 
 import { BASE_API } from '../../utility/api';
-import Copyright from '../../components/Auth/copyright';
+import Copyright from '../../components/auth/copyright';
 
 const SignIn: NextPage = (): JSX.Element => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -35,6 +36,9 @@ const SignIn: NextPage = (): JSX.Element => {
 
   return (
     <Container component="main" maxWidth="xs">
+      <Head>
+        <title>Krio Dictionary - Sign In</title>
+      </Head>
       <Box
         sx={{
           marginTop: 8,
