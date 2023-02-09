@@ -14,7 +14,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 
 import { BASE_API } from '../../utility/api';
-import Copyright from '../../components/auth/copyright';
+import Copyright from '../../components/generic/copyright';
 
 const SignIn: NextPage = (): JSX.Element => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {

@@ -13,7 +13,7 @@ import Container from '@mui/material/Container';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import { BASE_API, postLib } from '../../utility/api';
-import Copyright from '../../components/auth/copyright';
+import Copyright from '../../components/generic/copyright';
 
 const SignUp: NextPage = (): JSX.Element => {
   const router = useRouter();
