@@ -9,6 +9,7 @@ import { Box, Link as MuiLink } from '@mui/material';
 import Navbar from '../generic/navbar';
 import { DefaultLayoutProps } from '../../@types';
 import { BASE_API, fetcher } from '../../utility/api';
+import Frame from '../generic/frame';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -22,7 +23,7 @@ const DefaultLayout = ({ children }: DefaultLayoutProps) => {
   const { data, error } = useSWR(`${BASE_API}/letters`, fetcher);
 
   if (error) return <div>Failed to load</div>;
-  if (!data) return <div>Loading...</div>;
+  if (!data) return <Frame />;
 
   return (
     <Grid container spacing={3}>
