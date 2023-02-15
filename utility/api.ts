@@ -1,5 +1,7 @@
 export const BASE_API = 'http://localhost:3000/api/v1';
 
+export const fetcher = (url: string) => fetch(url).then((r) => r.json());
+
 export const postLib = async (endpoint: string, body: any) => {
   let response;
 
