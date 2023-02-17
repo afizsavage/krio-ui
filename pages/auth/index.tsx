@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { NextPage } from 'next';
+import Head from 'next/head';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
+import { useRouter } from 'next/router';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -14,8 +15,7 @@ import Container from '@mui/material/Container';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import { BASE_API, postLib } from '../../utility/api';
-import Copyright from '../../components/Auth/copyright';
-import { useRouter } from 'next/router';
+import Copyright from '../../components/generic/copyright';
 
 const SignIn: NextPage = (): JSX.Element => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -43,6 +43,9 @@ const SignIn: NextPage = (): JSX.Element => {
 
   return (
     <Container component="main" maxWidth="xs">
+      <Head>
+        <title>Krio Dictionary - Sign In</title>
+      </Head>
       <Box
         sx={{
           marginTop: 8,
@@ -89,7 +92,7 @@ const SignIn: NextPage = (): JSX.Element => {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Sign Up
+            Sign In
           </LoadingButton>
           <Grid container justifyContent="center">
             <Grid item>
