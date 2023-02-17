@@ -3,7 +3,10 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import { NextPage } from 'next';
 import Head from 'next/head';
+import Paper from '@mui/material/Paper';
+
 import { BASE_API, postLib } from '../../utility/api';
+import AddWordForm from '../../components/words/add-word-form';
 
 const AddWord: NextPage = (): JSX.Element => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -39,12 +42,14 @@ const AddWord: NextPage = (): JSX.Element => {
       <Head>
         <title>Krio Dictionary - Add Word</title>
       </Head>
-      <Box
-        component="form"
-        noValidate
-        onSubmit={handleSubmit}
-        sx={{ mt: 3 }}
-      ></Box>
+      <Paper
+        variant="outlined"
+        sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <AddWordForm />
+        </Box>
+      </Paper>
     </Container>
   );
 };
