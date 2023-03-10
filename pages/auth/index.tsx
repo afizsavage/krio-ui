@@ -13,6 +13,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { setCookie } from 'cookies-next';
 
 import { BASE_API, postLib } from '../../utility/api';
 import Copyright from '../../components/generic/copyright';
@@ -33,7 +34,9 @@ const SignIn: NextPage = (): JSX.Element => {
     };
     const response = await postLib(`${BASE_API}/users/sign_in`, postData);
 
-    if (response) {
+    if (response?.ok) {
+      const bearerToken = response.headers.get('authorization');
+      setCookie('bearerToken', bearerToken);
       setIsLoading(false);
       router.push('/');
     }
