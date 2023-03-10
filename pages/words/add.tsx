@@ -7,6 +7,7 @@ import Paper from '@mui/material/Paper';
 
 import { BASE_API, postLib } from '../../utility/api';
 import AddWordForm from '../../components/words/add-word-form';
+import WithAuth from '../../components/hoc/with-auth';
 
 const AddWord: NextPage = (): JSX.Element => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -54,4 +55,4 @@ const AddWord: NextPage = (): JSX.Element => {
   );
 };
 
-export default AddWord;
+export default WithAuth(AddWord);
