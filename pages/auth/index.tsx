@@ -15,7 +15,7 @@ import Container from '@mui/material/Container';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { setCookie } from 'cookies-next';
 
-import { BASE_API, postLib } from '../../utility/api';
+import { BASE_API, postLib } from '../../utils/api';
 import Copyright from '../../components/generic/copyright';
 
 const SignIn: NextPage = (): JSX.Element => {
