@@ -2,7 +2,7 @@ import * as React from 'react';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
+import { useRouter } from 'next/router';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -12,26 +12,36 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { setCookie } from 'cookies-next';
 
-import { BASE_API } from '../../utility/api';
+import { BASE_API, postLib } from '../../utils/api';
 import Copyright from '../../components/generic/copyright';
 
 const SignIn: NextPage = (): JSX.Element => {
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const router = useRouter();
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    setIsLoading(true);
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    fetch(`${BASE_API}users/sign_in`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    const formData = new FormData(event.currentTarget);
+    const postData = {
+      user: {
+        email: formData.get('email'),
+        password: formData.get('password'),
       },
-      body: JSON.stringify({
-        user: {
-          email: data.get('email'),
-          password: data.get('password'),
-        },
-      }),
-    });
+    };
+    const response = await postLib(`${BASE_API}/users/sign_in`, postData);
+
+    if (response?.ok) {
+      const bearerToken = response.headers.get('authorization');
+      setCookie('bearerToken', bearerToken);
+      setIsLoading(false);
+      router.push('/');
+    }
+
+    setIsLoading(false);
   };
 
   return (
@@ -78,14 +88,15 @@ const SignIn: NextPage = (): JSX.Element => {
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           />
-          <Button
+          <LoadingButton
+            loading={isLoading}
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
             Sign In
-          </Button>
+          </LoadingButton>
           <Grid container justifyContent="center">
             <Grid item>
               <Link href="/auth/sign-up" variant="body2">

@@ -2,8 +2,9 @@
 // import { Inter } from '@next/font/google';
 // import Typography from '@mui/material/Typography';
 
-import type { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import DefaultLayout from '../components/layouts/default';
+import { getCurrentUser } from '../utils/methods';
 import type { NextPageWithLayout } from './_app';
 
 const Page: NextPageWithLayout = () => {

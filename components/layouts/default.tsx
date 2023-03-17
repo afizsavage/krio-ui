@@ -8,7 +8,7 @@ import { Box, Link as MuiLink } from '@mui/material';
 
 import Navbar from '../generic/navbar';
 import { DefaultLayoutProps } from '../../@types';
-import { BASE_API, fetcher } from '../../utility/api';
+import { BASE_API, fetcher } from '../../utils/api';
 import Frame from '../generic/frame';
 
 const Item = styled(Paper)(({ theme }) => ({

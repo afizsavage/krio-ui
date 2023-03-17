@@ -10,7 +10,7 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
-import createEmotionCache from '../utility/createEmotionCache';
+import createEmotionCache from '../utils/create-emotion-cache';
 import lightThemeOptions from '../styles/theme/lightThemeOptions';
 import '../styles/index.css';
 

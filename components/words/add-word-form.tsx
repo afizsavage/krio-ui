@@ -6,9 +6,9 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
-import { BASE_API, fetcher } from '../../utility/api';
-import { getFirstCharOf, getFirstTwoCharOf } from '../../utility/methods';
-import retreiveCharIfExist from '../../utility/methods/char-checker';
+import { BASE_API, fetcher } from '../../utils/api';
+import { getFirstCharOf, getFirstTwoCharOf } from '../../utils/methods';
+import retreiveCharIfExist from '../../utils/methods/char-checker';
 
 const AddWordForm = () => {
   const { data, error } = useSwr(`${BASE_API}/letters`, fetcher);

@@ -5,8 +5,10 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import Paper from '@mui/material/Paper';
 
-import { BASE_API, postLib } from '../../utility/api';
+import { BASE_API, postLib } from '../../utils/api';
 import AddWordForm from '../../components/words/add-word-form';
+import WithAuth from '../../components/hoc/with-auth';
+import { getCurrentUser } from '../../utils/methods';
 
 const AddWord: NextPage = (): JSX.Element => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -37,6 +39,10 @@ const AddWord: NextPage = (): JSX.Element => {
     setIsLoading(false);
   };
 
+  React.useEffect(() => {
+    getCurrentUser();
+  });
+
   return (
     <Container component="main" maxWidth="xs">
       <Head>
@@ -54,4 +60,4 @@ const AddWord: NextPage = (): JSX.Element => {
   );
 };
 
-export default AddWord;
+export default WithAuth(AddWord);
