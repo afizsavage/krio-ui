@@ -37,7 +37,7 @@ export const getCurrentUser = async () => {
 
   const response = await request.json();
 
-  if (response.ok) {
+  if (response) {
     return response.data;
   } else {
     console.log('failed to load');

@@ -6,13 +6,19 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
-import { BASE_API, fetcher } from '../../utils/api';
+import { BASE_API, fetcher, postLib } from '../../utils/api';
 import { getFirstCharOf, getFirstTwoCharOf } from '../../utils/methods';
 import retreiveCharIfExist from '../../utils/methods/char-checker';
+import { getCookie } from 'cookies-next';
 
-const AddWordForm = () => {
+interface AddWordFormProps {
+  currentUser: string | null;
+}
+
+const AddWordForm = ({ currentUser }: AddWordFormProps) => {
   const { data, error } = useSwr(`${BASE_API}/letters`, fetcher);
   const [letterID, setLetterID] = React.useState<string | null>(null);
+  const [isBtnLoading, setIsBtnLoading] = React.useState<boolean>(false);
 
   const handleTitleChange = (val: string) => {
     if (val.length > 1) {
@@ -27,21 +33,50 @@ const AddWordForm = () => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-    const title = formData.get('title');
+    const postData = {
+      word: {
+        title: formData.get('title'),
+        letter_id: letterID,
+        user_id: currentUser,
+        defination_attributes: {
+          define: formData.get('define'),
+          example_statement: formData.get('exampleStatement'),
+          approval_status: 0,
+        },
+      },
+    };
 
-    // fetch(`${BASE_API}users/sign_in`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     user: {
-    //       email: data.get('email'),
-    //       password: data.get('password'),
-    //     },
-    //   }),
-    // });
-    console.log(title, letterID);
+    let response;
+
+    try {
+      response = await fetch(`${BASE_API}/words`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${getCookie('bearerToken')}`,
+        },
+        body: JSON.stringify(postData),
+      });
+    } catch (error) {
+      console.log('There was an error', error);
+    }
+
+    if (response?.ok) {
+      return response;
+    } else {
+      console.log(`HTTP Response Code: ${response?.status}`);
+    }
+
+    // const response = await postLib(`${BASE_API}/words`, postData);
+
+    // if (response?.ok) {
+    //   setIsBtnLoading(false);
+    // }
+
+    // console.log(postData);
+
+    setIsBtnLoading(false);
+    // console.log(title, letterID);
   };
 
   if (error) {
@@ -82,6 +117,7 @@ const AddWordForm = () => {
             <TextField
               id="exampleStatement"
               label="Example Statement"
+              name="exampleStatement"
               multiline
               rows={4}
               fullWidth
