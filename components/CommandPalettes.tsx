@@ -10,28 +10,38 @@ import {
     DialogBackdrop,
 } from '@headlessui/react'
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-const people = [
-    { id: 1, name: 'Leslie Alexander', url: '#' },
-    // More people...
-]
-
+import { getModel } from '@/lib/connector'
 export interface CommandPalettesProps {
     open: boolean
     setOpen: (args: boolean) => void
 }
 
+type ResponseData = {
+    id: string,
+    word: string,
+    letter_id: string
+}
+
 const CommandPalettes = ({ open, setOpen }: CommandPalettesProps) => {
     const [query, setQuery] = useState('')
+    const [results, setResults] = useState<ResponseData[]>([])
 
+    useEffect(() => {
+        const delayDebounce = setTimeout(() => {
+            if (query.trim() === "") {
+                setResults([]);
+                return;
+            }
 
-    const filteredPeople =
-        query === ''
-            ? []
-            : people.filter((person) => {
-                return person.name.toLowerCase().includes(query.toLowerCase())
-            })
+            getModel(`/search?q=${encodeURIComponent(query)}`)
+                .then((res) => setResults(res.data))
+                .catch((err) => console.error("Search error:", err))
+        }, 300); // debounce time: 300ms
+
+        return () => clearTimeout(delayDebounce);
+    }, [query]);
 
     return (
         <Dialog
@@ -52,20 +62,16 @@ const CommandPalettes = ({ open, setOpen }: CommandPalettesProps) => {
                     transition
                     className="mx-auto max-w-xl transform divide-y divide-gray-100 overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-black/5 transition-all data-closed:scale-95 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in"
                 >
-                    <Combobox
-                        onChange={(person) => {
-                            if (person) {
-                                window.location = person.url
-                            }
-                        }}
-                    >
+                    <Combobox>
                         <div className="grid grid-cols-1">
                             <ComboboxInput
-                                autoFocus
-                                className="col-start-1 row-start-1 h-12 w-full pr-4 pl-11 text-base text-gray-900 outline-hidden placeholder:text-gray-400 sm:text-sm"
-                                placeholder="Search..."
-                                onChange={(event) => setQuery(event.target.value)}
+                                type='text'
+                                placeholder="Search krio words..."
+                                value={query}
+                                onChange={(e) => setQuery(e.target.value)}
                                 onBlur={() => setQuery('')}
+                                className="col-start-1 row-start-1 h-12 w-full pr-4 pl-11 text-base text-gray-900 outline-hidden placeholder:text-gray-400 sm:text-sm"
+
                             />
                             <MagnifyingGlassIcon
                                 className="pointer-events-none col-start-1 row-start-1 ml-4 size-5 self-center text-gray-400"
@@ -73,22 +79,22 @@ const CommandPalettes = ({ open, setOpen }: CommandPalettesProps) => {
                             />
                         </div>
 
-                        {filteredPeople.length > 0 && (
+                        {results.length > 0 && (
                             <ComboboxOptions static className="max-h-72 scroll-py-2 overflow-y-auto py-2 text-sm text-gray-800">
-                                {filteredPeople.map((person) => (
+                                {results.map((result) => (
                                     <ComboboxOption
-                                        key={person.id}
-                                        value={person}
-                                        className="cursor-default px-4 py-2 select-none data-focus:bg-indigo-600 data-focus:text-white data-focus:outline-hidden"
+                                        key={result.id}
+                                        value={result}
+                                        className="cursor-default px-4 py-2 select-none data-focus:bg-zinc-800 data-focus:text-white data-focus:outline-hidden"
                                     >
-                                        {person.name}
+                                        {result.word}
                                     </ComboboxOption>
                                 ))}
                             </ComboboxOptions>
                         )}
 
-                        {query !== '' && filteredPeople.length === 0 && (
-                            <p className="p-4 text-sm text-gray-500">No people found.</p>
+                        {query !== '' && results.length === 0 && (
+                            <p className="p-4 text-sm text-gray-500">No word found.</p>
                         )}
                     </Combobox>
                 </DialogPanel>
