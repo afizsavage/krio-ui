@@ -1,16 +1,12 @@
-import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
+import DefaultLayout from "@/components/Layout";
 
 export default function Home() {
   return (
-    <div className=" font-[family-name:var(--font-geist-sans)]">
-      <Header />
+    <DefaultLayout>
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <HeroSection />
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-
-      </footer>
-    </div>
+    </DefaultLayout>
   );
 }

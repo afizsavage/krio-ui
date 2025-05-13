@@ -13,6 +13,7 @@ import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { useEffect, useState } from 'react'
 
 import { getModel } from '@/lib/connector'
+import { useRouter } from 'next/navigation'
 export interface CommandPalettesProps {
     open: boolean
     setOpen: (args: boolean) => void
@@ -27,6 +28,8 @@ type ResponseData = {
 const CommandPalettes = ({ open, setOpen }: CommandPalettesProps) => {
     const [query, setQuery] = useState('')
     const [results, setResults] = useState<ResponseData[]>([])
+
+    const router = useRouter()
 
     useEffect(() => {
         const delayDebounce = setTimeout(() => {
@@ -85,6 +88,7 @@ const CommandPalettes = ({ open, setOpen }: CommandPalettesProps) => {
                                     <ComboboxOption
                                         key={result.id}
                                         value={result}
+                                        onClick={() => router.push(`words/${result.id}`)}
                                         className="cursor-default px-4 py-2 select-none data-focus:bg-zinc-800 data-focus:text-white data-focus:outline-hidden"
                                     >
                                         {result.word}
