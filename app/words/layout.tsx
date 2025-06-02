@@ -1,12 +1,7 @@
 import {
-
-    CheckIcon,
-    ChevronDownIcon,
     ArrowLeftIcon
-
 } from '@heroicons/react/20/solid'
 
-import DefaultLayout from "@/components/Layout";
 
 
 const WordsLayout = ({

@@ -30,8 +30,13 @@ const CommandPalettes = ({ open, setOpen }: CommandPalettesProps) => {
 
     const [query, setQuery] = useState('')
     const [searchResult, setSearchResult] = useState<SearchResponseData[]>([])
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [history, setHistory] = useState<SearchResult[]>([])
     const [combinedResults, setCombinedResults] = useState<CombinedSearchResult[]>([])
+    const [loading, setLoading] = useState(false);
+    const [hasSearched, setHasSearched] = useState(false);
+
+
 
     const handleSearch = (searchSearchResult: SearchResult) => {
         if (searchSearchResult.id.trim() === '') return
@@ -79,17 +84,30 @@ const CommandPalettes = ({ open, setOpen }: CommandPalettesProps) => {
     useEffect(() => {
         const delayDebounce = setTimeout(() => {
             if (query.trim() === '') {
-                setSearchResult([])
-                return
+                setSearchResult([]);
+                setHasSearched(false); // Reset this too
+                setLoading(false);
+                return;
             }
 
-            getModel(`/search?q=${encodeURIComponent(query)}`)
-                .then((res) => setSearchResult(res.data))
-                .catch((err) => console.error('Search error:', err))
-        }, 300)
+            setLoading(true);
 
-        return () => clearTimeout(delayDebounce)
-    }, [query])
+            getModel(`/search?q=${encodeURIComponent(query)}`)
+                .then((res) => {
+                    setSearchResult(res.data);
+                    setHasSearched(true); // Only set this after receiving response
+                })
+                .catch((err) => {
+                    console.error('Search error:', err);
+                    setHasSearched(true); // Even on error, we attempted
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
+        }, 300);
+
+        return () => clearTimeout(delayDebounce);
+    }, [query]);
 
     return (
         <Dialog
@@ -133,9 +151,6 @@ const CommandPalettes = ({ open, setOpen }: CommandPalettesProps) => {
                             </kbd>
                         </div>
                         <ComboboxOptions static className="max-h-72 scroll-py-2 overflow-y-auto py-2 text-sm text-gray-800">
-                            {combinedResults.length === 0 && query && (
-                                <div className="px-4 py-2 text-gray-500">No results found</div>
-                            )}
                             {combinedResults.map((result) => (
                                 <ComboboxOption
                                     key={result.result.id}
@@ -153,6 +168,10 @@ const CommandPalettes = ({ open, setOpen }: CommandPalettesProps) => {
                                     {result.result.title}
                                 </ComboboxOption>
                             ))}
+
+                            {hasSearched && !loading && query.trim() !== '' && combinedResults.length === 0 && (
+                                <div className="px-4 py-2 text-gray-500">No results found</div>
+                            )}
                         </ComboboxOptions>
                     </Combobox>
                 </DialogPanel>

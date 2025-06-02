@@ -7,6 +7,9 @@ export type PageProps = {
 const WordPage = async ({ params }: PageProps) => {
     const { wid } = await params;
 
+    console.log('word id', wid);
+
+
     return (
         <WordHeader />
     );
