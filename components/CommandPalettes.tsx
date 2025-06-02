@@ -11,32 +11,66 @@ import {
 } from '@headlessui/react'
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { useEffect, useState, useRef } from 'react'
-import { getModel } from '@/lib/connector'
 import { useRouter } from 'next/navigation'
+import { ClockIcon } from '@heroicons/react/24/outline'
+
+import { getModel } from '@/lib/connector'
+import { addToSearchHistory, getSearchHistory } from '@/utils/searchHistory'
+import { SearchResponseData, SearchResult } from '@/@types'
+import { CombinedSearchResult, combineSearchResults } from '@/utils/combineSearchResults'
 
 export interface CommandPalettesProps {
     open: boolean
     setOpen: (args: boolean) => void
 }
 
-type ResponseData = {
-    id: string
-    word: string
-    letter_id: string
-}
-
 const CommandPalettes = ({ open, setOpen }: CommandPalettesProps) => {
-    const [query, setQuery] = useState('')
-    const [results, setResults] = useState<ResponseData[]>([])
     const inputRef = useRef<HTMLInputElement | null>(null)
     const router = useRouter()
 
+    const [query, setQuery] = useState('')
+    const [searchResult, setSearchResult] = useState<SearchResponseData[]>([])
+    const [history, setHistory] = useState<SearchResult[]>([])
+    const [combinedResults, setCombinedResults] = useState<CombinedSearchResult[]>([])
+
+    const handleSearch = (searchSearchResult: SearchResult) => {
+        if (searchSearchResult.id.trim() === '') return
+
+        addToSearchHistory(searchSearchResult)
+        setHistory(getSearchHistory())
+    }
+
+    const redirectToWordPage = (wordId: string) => {
+        router.push(`words/${wordId}`)
+    }
+
+    const handleQueryClick = (searchSearchResult: SearchResult) => {
+        setOpen(false)
+        handleSearch(searchSearchResult)
+        redirectToWordPage(searchSearchResult.id)
+    }
+
+    useEffect(() => {
+        setHistory(getSearchHistory())
+    }, [])
+
+    useEffect(() => {
+        const history = getSearchHistory()
+        const results = combineSearchResults(history, searchResult)
+
+        // Filter combined results based on query
+        const filteredResults = results.filter((result) =>
+            result.result?.title?.toLowerCase().includes(query.toLowerCase())
+        )
+
+        setCombinedResults(filteredResults)
+    }, [searchResult, query])
+
     useEffect(() => {
         if (open) {
-            // Wait a tick for dialog transitions to complete
             const timeout = setTimeout(() => {
                 inputRef.current?.focus()
-            }, 100) // Try 100–150ms for smoothness
+            }, 100)
 
             return () => clearTimeout(timeout)
         }
@@ -45,12 +79,12 @@ const CommandPalettes = ({ open, setOpen }: CommandPalettesProps) => {
     useEffect(() => {
         const delayDebounce = setTimeout(() => {
             if (query.trim() === '') {
-                setResults([])
+                setSearchResult([])
                 return
             }
 
             getModel(`/search?q=${encodeURIComponent(query)}`)
-                .then((res) => setResults(res.data))
+                .then((res) => setSearchResult(res.data))
                 .catch((err) => console.error('Search error:', err))
         }, 300)
 
@@ -78,7 +112,6 @@ const CommandPalettes = ({ open, setOpen }: CommandPalettesProps) => {
                 >
                     <Combobox>
                         <div className="grid grid-cols-1">
-
                             <ComboboxInput
                                 ref={inputRef}
                                 type="text"
@@ -89,7 +122,7 @@ const CommandPalettes = ({ open, setOpen }: CommandPalettesProps) => {
                                 className="col-start-1 row-start-1 h-12 w-full pr-4 pl-11 text-base text-gray-900 outline-hidden placeholder:text-gray-400 sm:text-sm"
                             />
                             <MagnifyingGlassIcon
-                                className="pointer-events-none col-start-1 row-start-1 ml-4 size-4 self-center text-gray-400"
+                                className="pointer-events-none col-start-1 row-start-1 ml-4 size-5 self-center text-gray-400"
                                 aria-hidden="true"
                             />
                             <kbd
@@ -99,25 +132,28 @@ const CommandPalettes = ({ open, setOpen }: CommandPalettesProps) => {
                                 esc
                             </kbd>
                         </div>
-
-                        {results.length > 0 && (
-                            <ComboboxOptions static className="max-h-72 scroll-py-2 overflow-y-auto py-2 text-sm text-gray-800">
-                                {results.map((result) => (
-                                    <ComboboxOption
-                                        key={result.id}
-                                        value={result}
-                                        onClick={() => router.push(`words/${result.id}`)}
-                                        className="cursor-default px-4 py-2 select-none data-focus:bg-zinc-800 data-focus:text-white data-focus:outline-hidden"
-                                    >
-                                        {result.word}
-                                    </ComboboxOption>
-                                ))}
-                            </ComboboxOptions>
-                        )}
-
-                        {query !== '' && results.length === 0 && (
-                            <p className="p-4 text-sm text-gray-500">No word found.</p>
-                        )}
+                        <ComboboxOptions static className="max-h-72 scroll-py-2 overflow-y-auto py-2 text-sm text-gray-800">
+                            {combinedResults.length === 0 && query && (
+                                <div className="px-4 py-2 text-gray-500">No results found</div>
+                            )}
+                            {combinedResults.map((result) => (
+                                <ComboboxOption
+                                    key={result.result.id}
+                                    value={result.result.id}
+                                    onClick={() => handleQueryClick({ id: result.result.id, title: result.result.title })}
+                                    className="cursor-default px-4 py-3 select-none flex items-center gap-x-2"
+                                >
+                                    <span className='p-1 rounded-full bg-gray-50'>
+                                        {result.source === 'api' ? (
+                                            <MagnifyingGlassIcon className='size-4 text-gray-400' aria-hidden="true" />
+                                        ) : (
+                                            <ClockIcon className='size-4 text-gray-400' aria-hidden="true" />
+                                        )}
+                                    </span>
+                                    {result.result.title}
+                                </ComboboxOption>
+                            ))}
+                        </ComboboxOptions>
                     </Combobox>
                 </DialogPanel>
             </div>
