@@ -151,26 +151,26 @@ const CommandPalettes = ({ open, setOpen }: CommandPalettesProps) => {
                             </kbd>
                         </div>
                         <ComboboxOptions static className="max-h-72 scroll-py-2 overflow-y-auto py-2 text-sm text-gray-800">
-                            {combinedResults.map((result) => (
+                            {combinedResults.map((combined) => (
                                 <ComboboxOption
-                                    key={result.result.id}
-                                    value={result.result.id}
-                                    onClick={() => handleQueryClick({ id: result.result.id, title: result.result.title })}
+                                    key={combined.result.id}
+                                    value={combined.result.id}
+                                    onClick={() => handleQueryClick({ id: combined.result.id, title: combined.result.title })}
                                     className="cursor-default px-4 py-3 select-none flex items-center gap-x-2"
                                 >
                                     <span className='p-1 rounded-full bg-gray-50'>
-                                        {result.source === 'api' ? (
+                                        {combined.source === 'api' ? (
                                             <MagnifyingGlassIcon className='size-4 text-gray-400' aria-hidden="true" />
                                         ) : (
                                             <ClockIcon className='size-4 text-gray-400' aria-hidden="true" />
                                         )}
                                     </span>
-                                    {result.result.title}
+                                    {combined.result.title}
                                 </ComboboxOption>
                             ))}
 
                             {hasSearched && !loading && query.trim() !== '' && combinedResults.length === 0 && (
-                                <div className="px-4 py-2 text-gray-500">No results found</div>
+                                <div className="px-4 py-2 text-gray-500">No results for {`"${query}"`}</div>
                             )}
                         </ComboboxOptions>
                     </Combobox>
