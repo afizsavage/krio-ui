@@ -16,7 +16,7 @@ import { ClockIcon } from '@heroicons/react/24/outline'
 
 import { getModel } from '@/lib/connector'
 import { addToSearchHistory, getSearchHistory } from '@/utils/searchHistory'
-import { SearchResponseData, SearchResult } from '@/@types'
+import { WordResponseData, SearchResult } from '@/@types'
 import { CombinedSearchResult, combineSearchResults } from '@/utils/combineSearchResults'
 
 export interface CommandPalettesProps {
@@ -29,7 +29,7 @@ const CommandPalettes = ({ open, setOpen }: CommandPalettesProps) => {
     const router = useRouter()
 
     const [query, setQuery] = useState('')
-    const [searchResult, setSearchResult] = useState<SearchResponseData[]>([])
+    const [searchResult, setSearchResult] = useState<WordResponseData[]>([])
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [history, setHistory] = useState<SearchResult[]>([])
     const [combinedResults, setCombinedResults] = useState<CombinedSearchResult[]>([])

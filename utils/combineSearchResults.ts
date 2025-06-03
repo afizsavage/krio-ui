@@ -1,4 +1,4 @@
-import { SearchResponseData, SearchResult } from '@/@types';
+import { WordResponseData, SearchResult } from '@/@types';
 
 export type CombinedSearchResult = {
   source: 'history' | 'api';
@@ -12,7 +12,7 @@ export type CombinedSearchResult = {
  */
 export function combineSearchResults(
   searchHistory: SearchResult[],
-  apiResults: SearchResponseData[]
+  apiResults: WordResponseData[]
 ): CombinedSearchResult[] {
   const historyResults: CombinedSearchResult[] = searchHistory.map(
     (result: SearchResult) => ({
@@ -22,7 +22,7 @@ export function combineSearchResults(
   );
 
   const apiResultObjects: CombinedSearchResult[] = apiResults.map(
-    (result: SearchResponseData) => ({
+    (result: WordResponseData) => ({
       source: 'api',
       result: { id: result.id, title: result.word },
     })
